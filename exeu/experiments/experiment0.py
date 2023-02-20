@@ -7,7 +7,7 @@ import sys
 import os
 sys.path.insert(0, os.path.join("..", "..", "exeu"))
 
-from .exeu.utils.validation import validate
+from utils.validation import validate
 from .exeu.dataset.torch_dataset import TorchDataset
 from .exeu.model.modded_base_flow import FlowM
 from .exeu.model.modded_nflows_init import (
