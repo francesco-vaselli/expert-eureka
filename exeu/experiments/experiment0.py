@@ -7,15 +7,15 @@ import sys
 import os
 sys.path.insert(0, os.path.join("..", "..", "exeu"))
 
-from exeu.utils.validation import validate
-from exeu.dataset.torch_dataset import TorchDataset
-from exeu.model.modded_base_flow import FlowM
-from exeu.model.modded_nflows_init import (
+from .exeu.utils.validation import validate
+from .exeu.dataset.torch_dataset import TorchDataset
+from .exeu.model.modded_base_flow import FlowM
+from .exeu.model.modded_nflows_init import (
     PiecewiseRationalQuadraticCouplingTransformM,
     MaskedPiecewiseRationalQuadraticAutoregressiveTransformM,
     )
-from exeu.utils.train_funcs import train, load_model
-from exeu.utils.args_train import get_args
+from .exeu.utils.train_funcs import train, load_model
+from .exeu.utils.args_train import get_args
 
 from nflows.distributions.normal import StandardNormal
 from nflows.transforms.base import CompositeTransform
