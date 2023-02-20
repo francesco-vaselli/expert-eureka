@@ -24,8 +24,6 @@ from nflows.transforms.splines.rational_quadratic import (
 from nflows.utils import torchutils
 from nflows.transforms import splines
 
-from modded_coupling import PiecewiseCouplingTransformM
-
 
 class CouplingTransformM(Transform):
     """A base class for coupling layers. Supports 2D inputs (NxD), as well as 4D inputs for
