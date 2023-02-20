@@ -98,7 +98,7 @@ def validate(
     rhoT_sampled = np.hypot(px0_sampled + px1_sampled, py0_sampled + py1_sampled)
     phiT_sampled = np.arctan2(py0_sampled + py1_sampled, px0_sampled + px1_sampled)
 
-    gen_sampled = np.hstack((rhoT_sampled, phiT_sampled))
+    gen_sampled = np.stack((rhoT_sampled, phiT_sampled), axis=1)
     names = ["rhoT", "phiT"]
 
     for n in range(0, len(names)):
