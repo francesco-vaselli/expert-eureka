@@ -41,13 +41,13 @@ def train_epoch(
             y = y.to(device, non_blocking=True)
 
         # Compute log prob
-        log_p, log_det = -flow.log_prob(z, context=y)
-        loss = log_p + log_det
+        log_p, log_det = flow.log_prob(z, context=y)
+        loss = -log_p - log_det
 
         # Keep track of total loss.
         train_loss += (loss.detach()).sum()
-        train_log_p += (log_p.detach()).sum()
-        train_log_det += (log_det.detach()).sum()
+        train_log_p += (-log_p.detach()).sum()
+        train_log_det += (-log_det.detach()).sum()
 
 
         # loss = (w * loss).sum() / w.sum()
@@ -103,13 +103,13 @@ def test_epoch(flow, test_loader, epoch, device=None):
                 y = y.to(device, non_blocking=True)
 
         # Compute log prob
-        log_p, log_det = -flow.log_prob(z, context=y)
-        loss = log_p + log_det
+        log_p, log_det = flow.log_prob(z, context=y)
+        loss = -log_p - log_det
 
         # Keep track of total loss.
         test_loss += (loss.detach()).sum()
-        test_log_p += (log_p.detach()).sum()
-        test_log_det += (log_det.detach()).sum()
+        test_log_p += (-log_p.detach()).sum()
+        test_log_det += (-log_det.detach()).sum()
 
         test_loss = test_loss.item() / len(test_loader.dataset)
         test_log_p = test_log_p.item()  / len(test_loader.dataset)
