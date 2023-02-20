@@ -98,11 +98,11 @@ def validate(
     rhoT_sampled = np.hypot(px0_sampled + px1_sampled, py0_sampled + py1_sampled)
     phiT_sampled = np.arctan2(py0_sampled + py1_sampled, px0_sampled + px1_sampled)
 
-    gen_sampled = np.stack((rhoT_sampled, phiT_sampled), axis=1)
+    gen_sampled = [rhoT_sampled, phiT_sampled]
     names = ["rhoT", "phiT"]
 
     for n in range(0, len(names)):
-        generated_sample = gen_sampled[:, i]
+        generated_sample = gen_sampled[i].flatten()
         test_values = context[:, i]
         ws = wasserstein_distance(test_values, generated_sample)
         # print(generated_sample.shape)
