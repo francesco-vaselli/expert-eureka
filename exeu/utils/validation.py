@@ -102,8 +102,8 @@ def validate(
     names = ["rhoT", "phiT"]
 
     for n in range(0, len(names)):
-        generated_sample = gen_sampled[i].flatten()
-        test_values = context[:, i]
+        generated_sample = gen_sampled[n].flatten()
+        test_values = context[:, n]
         ws = wasserstein_distance(test_values, generated_sample)
         # print(generated_sample.shape)
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 4.5), tight_layout=False)
