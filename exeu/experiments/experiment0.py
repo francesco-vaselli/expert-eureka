@@ -58,6 +58,7 @@ def trainer(tr_dataset, te_dataset, val_func):
     # define model
     base_dist = StandardNormal(shape=[arg.x_dim])
 
+    num_layers = 20
     transforms = []
     for _ in range(num_layers):
 
