@@ -117,9 +117,9 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     train_loader = torch.utils.data.DataLoader(
         dataset=tr_dataset,
-        batch_size=args.batch_size,
-        shuffle=~args.sorted_dataset,
-        num_workers=args.n_load_cores,
+        batch_size=512,
+        shuffle=True,
+        num_workers=15,
         pin_memory=True,
         sampler=None,
         drop_last=True,
@@ -130,7 +130,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     test_loader = torch.utils.data.DataLoader(
         dataset=te_dataset,
-        batch_size=args.batch_size,  # manually set batch size to avoid diff shapes
+        batch_size=1000,  # manually set batch size to avoid diff shapes
         shuffle=False,
         num_workers=0,
         pin_memory=True,

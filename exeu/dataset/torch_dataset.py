@@ -10,10 +10,10 @@ class TorchDataset(Dataset):
         y = self.data[["rhoT", "phiT"]].values[start:stop]
         x = self.data[["rho0", "phi0", "rho1", "phi1", "quad", "poisson"]]
         np.random.seed(seed)
-        x["quad"] = (
+        x.loc[:, "quad"] = (
             x["quad"].values + np.random.uniform(low=-0.5, high=0.5, size=len(x))
         ) / 4
-        x["poisson"] = (
+        x.loc[:, "poisson"] = (
             x["poisson"].values + np.random.uniform(low=-0.5, high=0.5, size=len(x))
         ) / 76
         x = x.values[start:stop]
