@@ -18,8 +18,8 @@ class TorchDataset(Dataset):
         ) / 76
         x = x.values[start:stop]
 
-        self.y = torch.from_numpy(y)
-        self.x = torch.from_numpy(x)
+        self.y = torch.from_numpy(y).float()
+        self.x = torch.from_numpy(x).float()
 
     def __len__(self):
         return len(self.x)
