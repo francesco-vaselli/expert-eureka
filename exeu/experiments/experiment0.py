@@ -109,6 +109,9 @@ def trainer(tr_dataset, te_dataset, val_func):
         )
         print(f"Resumed from: {res_epoch}")
 
+    tr_dataset = TorchDataset(csv_file='../dataset/data.csv', stop=75000)
+    te_dataset = TorchDataset(csv_file='../dataset/data.csv', start=75000)
+    
     train_loader = torch.utils.data.DataLoader(
         dataset=tr_dataset,
         batch_size=args.batch_size,
