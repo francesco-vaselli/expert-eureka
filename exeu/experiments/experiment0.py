@@ -70,9 +70,9 @@ def trainer(tr_dataset, te_dataset, val_func):
                                                             context_features=args.y_dim))
         transforms.append(MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(features=args.x_dim, tails="linear",
                                                             use_residual_blocks=False,
-                                                            hidden_features=128, #was 4, 20
+                                                            hidden_features=20, #was 4, 20
                                                             num_blocks=2,
-                                                            num_bins=32,
+                                                            num_bins=8,
                                                             context_features=args.y_dim))
         transforms.append(create_linear_transform(param_dim=args.x_dim))
 
@@ -91,9 +91,10 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     # resume checkpoints
     res_epoch = 0
+    lr = 1e-3
     optimizer = torch.optim.Adam(
         model.parameters(),
-        lr=args.lr,
+        lr=lr,
         betas=(args.beta1, args.beta2),
         weight_decay=args.weight_decay,
     )
