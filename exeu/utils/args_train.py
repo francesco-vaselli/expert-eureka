@@ -47,7 +47,7 @@ def add_args(parser):
                         help='Weight decay for the optimizer.')
     parser.add_argument('--epochs', type=int, default=500,
                         help='Number of epochs for training (default: 500)')
-    parser.add_argument('--seed', type=int, default=None,
+    parser.add_argument('--seed', type=int, default=0,
                         help='Seed for initializing training. ')
     parser.add_argument('--scheduler', type=str, default='linear',
                         help='Type of learning rate schedule')
@@ -58,7 +58,6 @@ def add_args(parser):
 
     # data options
     parser.add_argument('--N', type=int, default=100000,)
-    parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--no_rint', type=eval, default=True, choices=[True, False])
     parser.add_argument('--rescale_data', default=False, action='store_true')
     parser.add_argument('--shuffle_train', type=eval, default=True, choices=[True, False])
