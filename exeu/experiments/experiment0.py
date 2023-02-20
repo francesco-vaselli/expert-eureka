@@ -61,7 +61,7 @@ def trainer(tr_dataset, te_dataset, val_func):
     transforms = []
     for _ in range(num_layers):
 
-        transforms.append(MaskedAffineAutoregressiveTransform(features=args.x_dim,, 
+        transforms.append(MaskedAffineAutoregressiveTransform(features=args.x_dim,
                                                            use_residual_blocks=False,
                                                           num_blocks=10,
                                                          hidden_features=20, #was 4, 20
