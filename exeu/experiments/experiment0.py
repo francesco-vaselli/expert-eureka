@@ -68,12 +68,12 @@ def trainer(tr_dataset, te_dataset, val_func):
                                                           num_blocks=10,
                                                          hidden_features=20, #was 4, 20
                                                             context_features=args.y_dim))
-        transforms.append(MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(features=args.x_dim, tails="linear",
-                                                            use_residual_blocks=False,
-                                                            hidden_features=20, #was 4, 20
-                                                            num_blocks=2,
-                                                            num_bins=8,
-                                                            context_features=args.y_dim))
+        # transforms.append(MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(features=args.x_dim, tails="linear",
+        #                                                     use_residual_blocks=False,
+        #                                                     hidden_features=20, #was 4, 20
+        #                                                     num_blocks=2,
+        #                                                     num_bins=8,
+        #                                                     context_features=args.y_dim))
         transforms.append(create_linear_transform(param_dim=args.x_dim))
 
     transform = CompositeTransform(transforms)
