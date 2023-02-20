@@ -37,9 +37,9 @@ def validate(
             full_sim.append(x)
             context.append(inputs_y)
 
-    generated_samples = np.reshape(samples, (args.N, args.x_dim))
-    full_sim = np.reshape(full_sim, (args.N, args.x_dim))
-    context = np.reshape(context, (args.N, args.y_dim))
+    generated_samples = np.reshape(samples, (len(test_loader.dataset), args.x_dim))
+    full_sim = np.reshape(full_sim, (len(test_loader.dataset), args.x_dim))
+    context = np.reshape(context, (len(test_loader.dataset), args.y_dim))
 
     names = ["rho0", "phi0", "rho1", "phi1", "quad", "poisson"]
 

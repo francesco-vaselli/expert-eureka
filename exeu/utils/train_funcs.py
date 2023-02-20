@@ -130,7 +130,7 @@ def train(
     model_dir,
     args,
     writer=None,
-    output_freq=100,
+    output_freq=10,
     save_freq=10,
     res_epoch=0,
     val_func=None,
