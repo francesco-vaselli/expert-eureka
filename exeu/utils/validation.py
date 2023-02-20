@@ -155,7 +155,7 @@ def validate(
     fixed_context = torch.from_numpy(fixed_context).float().to(device)
 
     x_sampled = model.sample(
-                    num_samples=1, context=inputs_y.view(-1, args.y_dim)
+                    num_samples=1, context=fixed_context.view(-1, args.y_dim)
                 )
 
     x_sampled = x_sampled.cpu().detach().numpy().reshape((1000, args.x_dim))
