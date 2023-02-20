@@ -5,6 +5,7 @@ import time
 from tensorboardX import SummaryWriter
 import sys
 import os
+sys.path.insert(0, os.path.join("..", "..", "exeu"))
 
 from exeu.utils.validation import validate
 from exeu.dataset.torch_dataset import TorchDataset
