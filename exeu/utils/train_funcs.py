@@ -230,7 +230,7 @@ def save_model(
     dict = {
         "train_history": train_history,
         "test_history": test_history,
-        "model_hyperparams": model.model_hyperparams,
+        # "model_hyperparams": model.model_hyperparams,
         "model_state_dict": model.state_dict(),
         "optimizer_state_dict": optimizer.state_dict(),
         "epoch": epoch,
@@ -258,7 +258,7 @@ def load_model(device, model_dir=None, filename=None):
     p = Path(model_dir)
     checkpoint = torch.load(p / filename, map_location=device)
 
-    model_hyperparams = checkpoint["model_hyperparams"]
+    # model_hyperparams = checkpoint["model_hyperparams"]
     train_history = checkpoint["train_history"]
     test_history = checkpoint["test_history"]
 
