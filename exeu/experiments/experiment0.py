@@ -125,8 +125,6 @@ def trainer(tr_dataset, te_dataset, val_func):
         drop_last=True,
         # worker_init_fn=init_np_seed,
     )
-    if args.sorted_dataset:
-        print("train dataset NOT shuffled")
 
     test_loader = torch.utils.data.DataLoader(
         dataset=te_dataset,
