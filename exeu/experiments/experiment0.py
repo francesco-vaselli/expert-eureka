@@ -14,6 +14,7 @@ from exeu.model.modded_nflows_init import (
     MaskedPiecewiseRationalQuadraticAutoregressiveTransformM,
     )
 from exeu.utils.train_funcs import train, load_model
+from exeu.utils.args_train import get_args
 
 from nflows.distributions.normal import StandardNormal
 from nflows.transforms.base import CompositeTransform
@@ -111,7 +112,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     tr_dataset = TorchDataset(csv_file='../dataset/data.csv', stop=75000)
     te_dataset = TorchDataset(csv_file='../dataset/data.csv', start=75000)
-    
+
     train_loader = torch.utils.data.DataLoader(
         dataset=tr_dataset,
         batch_size=args.batch_size,
