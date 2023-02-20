@@ -128,7 +128,7 @@ def validate(
             range=[rangeR.min(), rangeR.max()],
             label=f"FlashSim, ws={round(ws, 4)}",
         )
-        fig.suptitle(f"Comparison of {names[i]} @ epoch {epoch}", fontsize=16)
+        fig.suptitle(f"Comparison of {names[n]} @ epoch {epoch}", fontsize=16)
         ax1.legend(frameon=False, loc="upper right")
 
         ax1.spines["right"].set_visible(False)
@@ -146,7 +146,7 @@ def validate(
             range=[rangeR.min(), rangeR.max()],
         )
 
-        writer.add_figure(f"comparison_{names[i]}", fig, global_step=epoch)
+        writer.add_figure(f"comparison_{names[n]}", fig, global_step=epoch)
         plt.close()
 
     fixed_rho = np.full((1000, 1), 0.5)
