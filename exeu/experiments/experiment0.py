@@ -57,7 +57,7 @@ def trainer(tr_dataset, te_dataset, val_func):
     writer.add_hparams(vars(args), {})
 
     # define model
-    base_dist = StandardNormal(shape=[arg.x_dim])
+    base_dist = StandardNormal(shape=[args.x_dim])
 
     num_layers = 20
     transforms = []
@@ -78,7 +78,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     transform = CompositeTransform(transforms)
 
-    model = FlowM(transform, base_dist).to("cuda")
+    model = FlowM(transform, base_dist)
 
     if args.device == "cuda":  # Single process, single GPU per process
         if torch.cuda.is_available():
