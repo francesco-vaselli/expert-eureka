@@ -13,9 +13,10 @@ from exeu.model.modded_nflows_init import (
     PiecewiseRationalQuadraticCouplingTransformM,
     MaskedPiecewiseRationalQuadraticAutoregressiveTransformM,
     )
-from exeu.utils.train_funcs import train
+from exeu.utils.train_funcs import train, load_model
 
 from nflows.distributions.normal import StandardNormal
+from nflows.transforms.base import CompositeTransform
 from nflows.transforms.autoregressive import MaskedAffineAutoregressiveTransform
 from nflows import transforms
 
@@ -54,7 +55,27 @@ def trainer(tr_dataset, te_dataset, val_func):
     writer.add_hparams(vars(args), {})
 
     # define model
+    base_dist = StandardNormal(shape=[arg.x_dim])
 
+    transforms = []
+    for _ in range(num_layers):
+
+        transforms.append(MaskedAffineAutoregressiveTransform(features=args.x_dim,, 
+                                                           use_residual_blocks=False,
+                                                          num_blocks=10,
+                                                         hidden_features=20, #was 4, 20
+                                                            context_features=args.y_dim))
+        transforms.append(MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(features=args.x_dim, tails="linear",
+                                                            use_residual_blocks=False,
+                                                            hidden_features=128, #was 4, 20
+                                                            num_blocks=2,
+                                                            num_bins=32,
+                                                            context_features=args.y_dim))
+        transforms.append(create_linear_transform(param_dim=args.x_dim))
+
+    transform = CompositeTransform(transforms)
+
+    model = FlowM(transform, base_dist).to("cuda")
 
     if args.device == "cuda":  # Single process, single GPU per process
         if torch.cuda.is_available():
