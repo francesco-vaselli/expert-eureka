@@ -70,7 +70,7 @@ class PointFlow(nn.Module):
         # # Compute the reconstruction likelihood P(X|z)
         # z_new = z.view(*z.size())
         # z_new = z_new + (log_pz * 0.).mean()
-        y, delta_log_py = self.point_cnf(x, context.view(-1, self.context_dim), torch.zeros(batch_size, num_points, 1).to(x))
+        y, delta_log_py = self.point_cnf(x, context.view(-1, 1, self.context_dim), torch.zeros(batch_size, num_points, 1).to(x))
         log_py = standard_normal_logprob(y).view(batch_size, -1).sum(1, keepdim=True)
         delta_log_py = delta_log_py.view(batch_size, num_points, 1).sum(1)
         log_px = log_py - delta_log_py
