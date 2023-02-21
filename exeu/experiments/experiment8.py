@@ -47,7 +47,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     args = get_args()
     print(args)
-    args.log_name = "ex7"
+    args.log_name = "ex8"
     save_dir = os.path.join("checkpoints", args.log_name)
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
