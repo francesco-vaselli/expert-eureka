@@ -2,7 +2,10 @@
 import torch
 import torch.nn as nn
 from torch.nn import Parameter
-from utils import reduce_tensor
+import sys 
+import os
+sys.path.insert(0, os.path.join("..", "..", "exeu"))
+from utils.CNFutils import reduce_tensor
 
 __all__ = ['MovingBatchNorm1d']
 
