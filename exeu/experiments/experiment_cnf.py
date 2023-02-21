@@ -94,7 +94,7 @@ def trainer(tr_dataset, te_dataset, val_func):
         for x, y in train_loader:
             x = x.to(device)
             y = y.to(device)
-            loss = -flow(y).log_prob(x)  # -log p(x | y)
+            loss = -model(y).log_prob(x)  # -log p(x | y)
             loss = loss.mean()
             train_loss += loss.item()
             optimizer.zero_grad()
