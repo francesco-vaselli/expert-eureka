@@ -27,7 +27,7 @@ def make_dataset(seed: int = 0, N: int = 100000) -> pd.DataFrame:
     quad[(-np.pi < phiT) & (phiT < -np.pi / 2)] = 2
     quad[(-np.pi / 2 < phiT) & (phiT < 0)] = 3
 
-    poisson = np.random.poisson(lam=10 * rhoT, size=N)
+    poisson = np.random.poisson(lam=rhoT, size=N)
 
     df = pd.DataFrame(
         {
