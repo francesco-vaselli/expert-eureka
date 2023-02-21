@@ -3,6 +3,8 @@ import numpy as np
 import torch.nn.functional as F
 from torch import optim
 from torch import nn
+import sys 
+import os
 sys.path.insert(0, os.path.join("..", "..", "exeu"))
 from .flow_cnf import get_point_cnf
 from .flow_cnf import get_latent_cnf
@@ -40,7 +42,7 @@ class PointFlow(nn.Module):
         self.point_cnf = f(self.point_cnf)
         self.latent_cnf = f(self.latent_cnf)
 
-    def forward(self, x, c):
+    def forward(self, x, context):
         # opt.zero_grad()
         batch_size = x.size(0)
         num_points = x.size(1)
@@ -68,14 +70,18 @@ class PointFlow(nn.Module):
         # # Compute the reconstruction likelihood P(X|z)
         # z_new = z.view(*z.size())
         # z_new = z_new + (log_pz * 0.).mean()
-        y, delta_log_py = self.point_cnf(x, c, torch.zeros(batch_size, num_points, 1).to(x))
+        y, delta_log_py = self.point_cnf(x, context, torch.zeros(batch_size, num_points, 1).to(x))
         log_py = standard_normal_logprob(y).view(batch_size, -1).sum(1, keepdim=True)
         delta_log_py = delta_log_py.view(batch_size, num_points, 1).sum(1)
         log_px = log_py - delta_log_py
 
-        recon_loss = -log_px.mean() * self.recon_weight
+        recon_loss = -log_px.mean()
         return recon_loss
 
+    def log_prob(self, x, context):
+        loss = self.forward(x, context)
+        return loss
+        
     def encode(self, x):
         z_mu, z_sigma = self.encoder(x)
         if self.use_deterministic_encoder:
