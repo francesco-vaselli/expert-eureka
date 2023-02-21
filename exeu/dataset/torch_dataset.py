@@ -15,7 +15,7 @@ class TorchDataset(Dataset):
         ) / 4
         x.loc[:, 'poisson'] = (
             x["poisson"].values + np.random.uniform(low=-0.5, high=0.5, size=len(x))
-        ) / 76
+        ) / 16
         x = x.values[start:stop]
 
         self.y = torch.from_numpy(y).float()
