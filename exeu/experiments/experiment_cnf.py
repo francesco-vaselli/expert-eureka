@@ -92,11 +92,13 @@ def trainer(tr_dataset, te_dataset, val_func):
     for epoch in range(res_epoch, args.epochs):
         train_loss = 0.0
         for x, y in train_loader:
+            x = x.to(device)
+            y = y.to(device)
             loss = -flow(y).log_prob(x)  # -log p(x | y)
             loss = loss.mean()
             train_loss += loss.item()
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            
+
         print("Epoch: %d, Train loss: %.3f" % (epoch, train_loss / len(train_loader)))
