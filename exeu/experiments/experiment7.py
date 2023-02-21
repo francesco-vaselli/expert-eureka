@@ -1,6 +1,7 @@
 # experiment 0 of our toy problem
+# params 770k
 import torch
-
+from torch.nn import functional as F
 import time
 from tensorboardX import SummaryWriter
 import sys
@@ -89,7 +90,7 @@ def trainer(tr_dataset, te_dataset, val_func):
                         hidden_features=64,
                         context_features=args.y_dim,
                         num_blocks=5,
-                        activation="relu",
+                        activation=F.relu,
                         dropout_probability=0.0,
                         use_batch_norm=False,
                     )
