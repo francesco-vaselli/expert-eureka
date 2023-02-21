@@ -1,5 +1,9 @@
 import argparse
 
+NONLINEARITIES = ["tanh", "relu", "softplus", "elu", "swish", "square", "identity"]
+SOLVERS = ["dopri5", "bdf", "rk4", "midpoint", 'adams', 'explicit_adams', 'fixed_adams']
+LAYERS = ["ignore", "concat", "concat_v2", "squash", "concatsquash", "scale", "concatscale"]
+
 Y_DIM = 2
 X_DIM = 6   
 
@@ -27,7 +31,18 @@ def add_args(parser):
     parser.add_argument('--block_size', type=int, default=2)
     parser.add_argument('--mask_type', type=str, default='alternating-binary', choices=['alternating-binary', 'block-binary', 'identity'])
     parser.add_argument('--init_identity', type=eval, default=True, choices=[True, False])
-
+    
+    # cnf options
+    parser.add_argument("--layer_type", type=str, default="concatsquash", choices=LAYERS)
+    parser.add_argument('--time_length', type=float, default=0.5)
+    parser.add_argument('--train_T', type=eval, default=True, choices=[True, False])
+    parser.add_argument("--nonlinearity", type=str, default="tanh", choices=NONLINEARITIES)
+    parser.add_argument('--use_adjoint', type=eval, default=True, choices=[True, False])
+    parser.add_argument('--solver', type=str, default='dopri5', choices=SOLVERS)
+    parser.add_argument('--atol', type=float, default=1e-5)
+    parser.add_argument('--rtol', type=float, default=1e-5)
+    parser.add_argument('--sync_bn', type=eval, default=False, choices=[True, False])
+    parser.add_argument('--bn_lag', type=float, default=0)
 
     # training options
     parser.add_argument('--n_load_cores', type=int, default=20)
