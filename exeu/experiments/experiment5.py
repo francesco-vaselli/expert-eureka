@@ -1,4 +1,5 @@
 # experiment 0 of our toy problem
+# 906k params
 import torch
 
 import time

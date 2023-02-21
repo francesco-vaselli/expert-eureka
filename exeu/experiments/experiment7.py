@@ -75,7 +75,7 @@ def trainer(tr_dataset, te_dataset, val_func):
             )
         )
         transforms.append(create_linear_transform(param_dim=args.x_dim))
-    for _ in range(15):
+    for i in range(15):
 
         transforms.append(
             PiecewiseRationalQuadraticCouplingTransformM(
