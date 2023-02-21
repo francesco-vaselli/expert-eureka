@@ -102,3 +102,9 @@ def trainer(tr_dataset, te_dataset, val_func):
             optimizer.step()
 
         print("Epoch: %d, Train loss: %.3f" % (epoch, train_loss / len(train_loader)))
+
+
+if __name__ == "__main__":
+    tr_dataset = TorchDataset(csv_file='../dataset/data.csv', stop=75000)
+    te_dataset = TorchDataset(csv_file='../dataset/data.csv', start=75000)
+    trainer(tr_dataset, te_dataset, validate)
