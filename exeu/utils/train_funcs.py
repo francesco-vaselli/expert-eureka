@@ -89,6 +89,7 @@ def test_epoch(flow, test_loader, epoch, device=None):
     Returns:
         float -- test loss
     """
+    
 
     with torch.no_grad():
         flow.eval()
@@ -102,18 +103,18 @@ def test_epoch(flow, test_loader, epoch, device=None):
                 z = z.to(device, non_blocking=True)
                 y = y.to(device, non_blocking=True)
 
-        # Compute log prob
-        log_p, log_det = flow.log_prob(z, context=y)
-        loss = -log_p - log_det
+            # Compute log prob
+            log_p, log_det = flow.log_prob(z, context=y)
+            loss = -log_p - log_det
 
-        # Keep track of total loss.
-        test_loss += (loss.detach()).sum()
-        test_log_p += (-log_p.detach()).sum()
-        test_log_det += (-log_det.detach()).sum()
+            # Keep track of total loss.
+            test_loss += (loss.detach()).sum()
+            test_log_p += (-log_p.detach()).sum()
+            test_log_det += (-log_det.detach()).sum()
 
-        test_loss = test_loss.item() / len(test_loader.dataset)
+        test_loss = test_loss.item() / len(test_loader.dataset) 
         test_log_p = test_log_p.item()  / len(test_loader.dataset)
-        test_log_det = test_log_det.item()  / len(test_loader.dataset)
+        test_log_det = test_log_det.item()  / len(test_loader.dataset) 
         # test_loss = test_loss.item() / total_weight.item()
         print("Test set: Average loss: {:.4f}\n".format(test_loss))
 
@@ -158,7 +159,7 @@ def train(
         train_loss, train_log_p, train_log_det = train_epoch(
             model, train_loader, optimizer, epoch, device, output_freq, args=args
         )
-        test_loss, test_log_p, test_log_det = test_epoch(model, test_loader, epoch, device)
+        test_loss, test_log_p, test_log_det = test_epoch(model, test_loader, epoch, device, test_loss_SF)
 
         scheduler.step()
         train_history.append(train_loss)
