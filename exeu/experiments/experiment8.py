@@ -62,7 +62,7 @@ def trainer(tr_dataset, te_dataset, val_func):
     writer.add_hparams(vars(args), {})
 
     # define model
-    model = PointFlow(args, input_dim=args.x_dim, hidden_dims=128, context_dim=args.y_dim, num_blocks=10, conditional=True)
+    model = PointFlow(args, input_dim=args.x_dim, hidden_dims='128', context_dim=args.y_dim, num_blocks=10, conditional=True)
 
     if args.device == "cuda":  # Single process, single GPU per process
         if torch.cuda.is_available():
