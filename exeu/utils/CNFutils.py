@@ -1,5 +1,5 @@
 from pprint import pprint
-from sklearn.svm import LinearSVC
+
 from math import log, pi
 import os
 import torch
@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+
 
 
 class AverageValueMeter(object):
