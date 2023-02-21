@@ -91,7 +91,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     # resume checkpoints
     res_epoch = 0
-    lr = 1e-4
+    lr = 1e-5
     optimizer = torch.optim.Adam(
         model.parameters(),
         lr=lr,
