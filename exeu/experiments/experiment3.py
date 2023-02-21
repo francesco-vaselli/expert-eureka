@@ -5,6 +5,7 @@ import time
 from tensorboardX import SummaryWriter
 import sys
 import os
+
 sys.path.insert(0, os.path.join("..", "..", "exeu"))
 
 from utils.validation import validate
@@ -13,7 +14,7 @@ from model.modded_base_flow import FlowM
 from model.modded_nflows_init import (
     PiecewiseRationalQuadraticCouplingTransformM,
     MaskedPiecewiseRationalQuadraticAutoregressiveTransformM,
-    )
+)
 from utils.train_funcs import train, load_model
 from utils.args_train import get_args
 
@@ -37,6 +38,7 @@ def create_linear_transform(param_dim):
             transforms.LULinear(param_dim, identity_init=True),
         ]
     )
+
 
 def trainer(tr_dataset, te_dataset, val_func):
 
@@ -62,21 +64,29 @@ def trainer(tr_dataset, te_dataset, val_func):
     num_layers = 30
     transforms = []
     for _ in range(6):
-        transforms.append(MaskedAffineAutoregressiveTransform(features=args.x_dim,
-                                                           use_residual_blocks=False,
-                                                          num_blocks=2,
-                                                         hidden_features=64, #was 4, 20
-                                                            context_features=args.y_dim))
+        transforms.append(
+            MaskedAffineAutoregressiveTransform(
+                features=args.x_dim,
+                use_residual_blocks=False,
+                num_blocks=2,
+                hidden_features=64,  # was 4, 20
+                context_features=args.y_dim,
+            )
+        )
         transforms.append(create_linear_transform(param_dim=args.x_dim))
     for _ in range(15):
 
-        
-        transforms.append(MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(features=args.x_dim, tails="linear",
-                                                            use_residual_blocks=False,
-                                                            hidden_features=64, #was 4, 20
-                                                            num_blocks=2,
-                                                            num_bins=8,
-                                                            context_features=args.y_dim))
+        transforms.append(
+            MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(
+                features=args.x_dim,
+                tails="linear",
+                use_residual_blocks=False,
+                hidden_features=64,  # was 4, 20
+                num_blocks=2,
+                num_bins=8,
+                context_features=args.y_dim,
+            )
+        )
         transforms.append(create_linear_transform(param_dim=args.x_dim))
 
     transform = CompositeTransform(transforms)
@@ -161,7 +171,8 @@ def trainer(tr_dataset, te_dataset, val_func):
         val_func=validate,
     )
 
+
 if __name__ == "__main__":
-    tr_dataset = TorchDataset(csv_file='../dataset/data.csv', stop=950000)
-    te_dataset = TorchDataset(csv_file='../dataset/data.csv', start=950000)
+    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000)
+    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000)
     trainer(tr_dataset, te_dataset, validate)

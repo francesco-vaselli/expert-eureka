@@ -46,8 +46,8 @@ def add_args(parser):
                         help='Momentum for SGD')
     parser.add_argument('--weight_decay', type=float, default=1e-5,
                         help='Weight decay for the optimizer.')
-    parser.add_argument('--epochs', type=int, default=500,
-                        help='Number of epochs for training (default: 500)')
+    parser.add_argument('--epochs', type=int, default=750,
+                        help='Number of epochs for training (default: 750)')
     parser.add_argument('--seed', type=int, default=0,
                         help='Seed for initializing training. ')
     parser.add_argument('--scheduler', type=str, default='linear',

@@ -5,6 +5,7 @@ import time
 from tensorboardX import SummaryWriter
 import sys
 import os
+
 sys.path.insert(0, os.path.join("..", "..", "exeu"))
 
 from utils.validation import validate
@@ -13,7 +14,7 @@ from model.modded_base_flow import FlowM
 from model.modded_nflows_init import (
     PiecewiseRationalQuadraticCouplingTransformM,
     MaskedPiecewiseRationalQuadraticAutoregressiveTransformM,
-    )
+)
 from utils.train_funcs import train, load_model
 from utils.args_train import get_args
 
@@ -37,6 +38,7 @@ def create_linear_transform(param_dim):
             transforms.LULinear(param_dim, identity_init=True),
         ]
     )
+
 
 def trainer(tr_dataset, te_dataset, val_func):
 
@@ -63,11 +65,15 @@ def trainer(tr_dataset, te_dataset, val_func):
     transforms = []
     for _ in range(num_layers):
 
-        transforms.append(MaskedAffineAutoregressiveTransform(features=args.x_dim,
-                                                           use_residual_blocks=False,
-                                                          num_blocks=10,
-                                                         hidden_features=20, #was 4, 20
-                                                            context_features=args.y_dim))
+        transforms.append(
+            MaskedAffineAutoregressiveTransform(
+                features=args.x_dim,
+                use_residual_blocks=False,
+                num_blocks=10,
+                hidden_features=20,  # was 4, 20
+                context_features=args.y_dim,
+            )
+        )
         # transforms.append(MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(features=args.x_dim, tails="linear",
         #                                                     use_residual_blocks=False,
         #                                                     hidden_features=20, #was 4, 20
@@ -158,7 +164,8 @@ def trainer(tr_dataset, te_dataset, val_func):
         val_func=validate,
     )
 
+
 if __name__ == "__main__":
-    tr_dataset = TorchDataset(csv_file='../dataset/data.csv', stop=75000)
-    te_dataset = TorchDataset(csv_file='../dataset/data.csv', start=75000)
+    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=75000)
+    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=75000)
     trainer(tr_dataset, te_dataset, validate)

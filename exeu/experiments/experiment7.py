@@ -21,7 +21,8 @@ from utils.args_train import get_args
 from nflows.distributions.normal import StandardNormal
 from nflows.transforms.base import CompositeTransform
 from nflows.transforms.autoregressive import MaskedAffineAutoregressiveTransform
-from nflows import transforms
+from nflows import transforms, utils
+import nflows.nn.nets as nn_
 
 
 def create_linear_transform(param_dim):
@@ -44,7 +45,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     args = get_args()
     print(args)
-    args.log_name = "ex1"
+    args.log_name = "ex7"
     save_dir = os.path.join("checkpoints", args.log_name)
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -63,8 +64,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     num_layers = 30
     transforms = []
-    for _ in range(num_layers):
-
+    for _ in range(6):
         transforms.append(
             MaskedAffineAutoregressiveTransform(
                 features=args.x_dim,
@@ -74,12 +74,32 @@ def trainer(tr_dataset, te_dataset, val_func):
                 context_features=args.y_dim,
             )
         )
-        # transforms.append(MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(features=args.x_dim, tails="linear",
-        #                                                     use_residual_blocks=False,
-        #                                                     hidden_features=20, #was 4, 20
-        #                                                     num_blocks=2,
-        #                                                     num_bins=8,
-        #                                                     context_features=args.y_dim))
+        transforms.append(create_linear_transform(param_dim=args.x_dim))
+    for _ in range(15):
+
+        transforms.append(
+            PiecewiseRationalQuadraticCouplingTransformM(
+                mask=utils.create_alternating_binary_mask(
+                    args.x_dim, even=(i % 2 == 0)
+                ),
+                transform_net_create_fn=(
+                    lambda in_features, out_features: nn_.ResidualNet(
+                        in_features=in_features,
+                        out_features=out_features,
+                        hidden_features=64,
+                        context_features=args.y_dim,
+                        num_blocks=5,
+                        activation="relu",
+                        dropout_probability=0.0,
+                        use_batch_norm=False,
+                    )
+                ),
+                num_bins=8,
+                tails="linear",
+                tail_bound=3,
+                apply_unconditional_transform=False,
+            )
+        )
         transforms.append(create_linear_transform(param_dim=args.x_dim))
 
     transform = CompositeTransform(transforms)
@@ -97,7 +117,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     # resume checkpoints
     res_epoch = 0
-    lr = 1e-5
+    lr = 1e-4
     optimizer = torch.optim.Adam(
         model.parameters(),
         lr=lr,
@@ -166,6 +186,6 @@ def trainer(tr_dataset, te_dataset, val_func):
 
 
 if __name__ == "__main__":
-    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=75000)
-    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=75000)
+    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000)
+    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000)
     trainer(tr_dataset, te_dataset, validate)
