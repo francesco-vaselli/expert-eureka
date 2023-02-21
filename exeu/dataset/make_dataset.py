@@ -51,6 +51,6 @@ def make_dataset(seed: int = 0, N: int = 100000) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    df = make_dataset(seed=0, N=100000)
+    df = make_dataset(seed=0, N=1000000)
     print(df.poisson.describe())
     df.to_csv("data.csv", index=False)
