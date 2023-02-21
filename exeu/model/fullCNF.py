@@ -15,11 +15,11 @@ from utils.CNFutils import truncated_normal, reduce_tensor, standard_normal_logp
 class PointFlow(nn.Module):
     def __init__(self, args, input_dim, hidden_dims, context_dim, num_blocks, conditional):
         super(PointFlow, self).__init__()
-        self.input_dim = args.input_dim
-        self.hidden_dims = args.hidden_dims
-        self.context_dim = args.context_dim
-        self.num_blocks = args.num_blocks
-        self.conditional = args.conditional
+        self.input_dim = input_dim
+        self.hidden_dims = hidden_dims
+        self.context_dim = context_dim
+        self.num_blocks = num_blocks
+        self.conditional = conditional
 
         self.point_cnf = get_point_cnf(args, input_dim, hidden_dims, context_dim, num_blocks, True)
 
@@ -81,7 +81,7 @@ class PointFlow(nn.Module):
     def log_prob(self, x, context):
         loss = self.forward(x, context)
         return loss
-        
+
     def encode(self, x):
         z_mu, z_sigma = self.encoder(x)
         if self.use_deterministic_encoder:
