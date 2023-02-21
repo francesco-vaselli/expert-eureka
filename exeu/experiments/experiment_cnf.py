@@ -96,12 +96,13 @@ def trainer(tr_dataset, te_dataset, val_func):
             y = y.to(device)
             loss = -model(y).log_prob(x)  # -log p(x | y)
             loss = loss.mean()
+            print(loss.item())
             train_loss += loss.item()
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
 
-        print("Epoch: %d, Train loss: %.3f" % (epoch, train_loss / len(train_loader)))
+        print("Epoch: %d, Train loss: %.3f" % (epoch, train_loss*512 / len(train_loader)))
 
 
 if __name__ == "__main__":
