@@ -45,7 +45,7 @@ class PointFlow(nn.Module):
     def forward(self, x, context):
         # opt.zero_grad()
         batch_size = x.size(0)
-        num_points = x.size(1)
+        num_points = 1
         # z_mu, z_sigma = self.encoder(x)
         # if self.use_deterministic_encoder:
         #     z = z_mu + 0 * z_sigma
@@ -71,7 +71,9 @@ class PointFlow(nn.Module):
         # z_new = z.view(*z.size())
         # z_new = z_new + (log_pz * 0.).mean()
         # print("x", x.size(), "context", context.size())
-        y, delta_log_py = self.point_cnf(x, context, torch.zeros(batch_size, num_points, 1).to(x))
+        x_new = x.view(batch_size, 1, self.input_dim)
+        context_new = context.view(batch_size, 1, self.context_dim)
+        y, delta_log_py = self.point_cnf(x_new, context_new, torch.zeros(batch_size, num_points, 1).to(x))
         log_py = standard_normal_logprob(y).view(batch_size, -1).sum(1, keepdim=True)
         delta_log_py = delta_log_py.view(batch_size, num_points, 1).sum(1)
         log_px = log_py - delta_log_py
