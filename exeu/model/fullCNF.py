@@ -78,12 +78,11 @@ class PointFlow(nn.Module):
         delta_log_py = delta_log_py.view(batch_size, num_points, 1).sum(1)
         log_px = log_py - delta_log_py
 
-        recon_loss = -log_px.mean()
-        return recon_loss
+        return -log_py, delta_log_py #NOTE: a minus sign to follow their convention
 
     def log_prob(self, x, context):
-        loss = self.forward(x, context)
-        return loss
+        log_py, delta_log_py = self.forward(x, context)
+        return log_py, delta_log_py
 
     def encode(self, x):
         z_mu, z_sigma = self.encoder(x)
