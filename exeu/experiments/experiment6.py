@@ -84,6 +84,7 @@ def trainer(tr_dataset, te_dataset, val_func):
                 use_residual_blocks=False,
                 hidden_features=64,  # was 4, 20
                 num_blocks=2,
+                tail_bound=3.0,
                 num_bins=8,
                 context_features=args.y_dim,
             )

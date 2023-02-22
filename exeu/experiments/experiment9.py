@@ -70,7 +70,7 @@ def trainer(tr_dataset, te_dataset, val_func):
                 features=args.x_dim,
                 use_residual_blocks=False,
                 num_blocks=4,
-                hidden_features=128,  # was 4, 20
+                hidden_features=128,
                 context_features=args.y_dim,
             )
         )
