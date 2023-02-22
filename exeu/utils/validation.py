@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import wasserstein_distance
+from scipy.stats import wasserstein_distance, poisson
 
 
 def validate(
@@ -149,8 +149,8 @@ def validate(
         writer.add_figure(f"comparison_{names[n]}", fig, global_step=epoch)
         plt.close()
 
-    fixed_rho = np.full((1000, 1), 0.5)
-    fixed_phi = np.full((1000, 1), 0.75)
+    fixed_rho = np.full((10000, 1), 1)
+    fixed_phi = np.full((10000, 1), 0.75)
     fixed_context = np.hstack((fixed_rho, fixed_phi))
     fixed_context = torch.from_numpy(fixed_context).float().to(device)
 
@@ -158,13 +158,18 @@ def validate(
                     num_samples=1, context=fixed_context.view(-1, args.y_dim)
                 )
 
-    x_sampled = x_sampled.cpu().detach().numpy().reshape((1000, args.x_dim))
-    test_values = x_sampled[:, 5]
+    x_sampled = x_sampled.cpu().detach().numpy().reshape((10000, args.x_dim))
+    test_values = x_sampled[:, 5]*16 # rescaled by the dataset divide factor
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9, 4.5), tight_layout=False)
     _, rangeR, _ = ax1.hist(
-        test_values, histtype="step", label="FullSim", lw=1, bins=100
+        test_values, histtype="step", label="FlashSim", lw=1, bins=100, density=True
     )
+    xmin, xmax = ax1.get_xlim()
+    xp = np.linspace(xmin, xmax, 10000)
+    p = poisson.pdf(xp, 1)
+    ax1.plot(xp, p, label="Analytic Poisson", lw=1)
+
     fig.suptitle(f"poisson @ epoch {epoch}", fontsize=16)
     ax1.legend(frameon=False, loc="upper right")
 
