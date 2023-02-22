@@ -90,6 +90,7 @@ def validate(
 
         writer.add_figure(f"comparison_{names[i]}", fig, global_step=epoch)
         plt.close()
+        writer.add_scalar(f"ws/{names[i]}", ws, epoch)
 
     px0_sampled = generated_samples[:, 0] * np.cos(generated_samples[:, 1])
     py0_sampled = generated_samples[:, 0] * np.sin(generated_samples[:, 1])
@@ -147,6 +148,7 @@ def validate(
         )
 
         writer.add_figure(f"comparison_{names[n]}", fig, global_step=epoch)
+        writer.add_scalar(f"ws/{names[n]}", ws, epoch)
         plt.close()
 
     fixed_rho = np.full((10000, 1), 1)
