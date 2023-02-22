@@ -167,7 +167,7 @@ def validate(
     )
     xmin, xmax = ax1.get_xlim()
     xp = np.linspace(xmin, xmax, 10000)
-    p = poisson.pdf(xp, 1)
+    p = poisson.pmf(xp, 1)
     ax1.plot(xp, p, label="Analytic Poisson", lw=1)
 
     fig.suptitle(f"poisson @ epoch {epoch}", fontsize=16)
