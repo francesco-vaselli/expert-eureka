@@ -95,7 +95,6 @@ def trainer(tr_dataset, te_dataset, val_func):
                         use_batch_norm=False,
                     )
                 ),
-                tail_bound=3,
                 num_bins=8,
                 tails="linear",
                 tail_bound=3,
