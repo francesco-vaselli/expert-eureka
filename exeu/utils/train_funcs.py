@@ -244,7 +244,7 @@ def save_model(
     torch.save(dict, p / resume_filename)
 
 
-def load_model(device, model_dir=None, filename=None):
+def load_model(model, device, model_dir=None, filename=None):
     """Load a saved model.
     Args:
         filename:       File name
@@ -264,7 +264,7 @@ def load_model(device, model_dir=None, filename=None):
     test_history = checkpoint["test_history"]
 
     # Load model
-    model = create_NDE_model(**model_hyperparams)
+    # model = create_NDE_model(**model_hyperparams)
     model.load_state_dict(checkpoint["model_state_dict"])
     model.to(device)
 
