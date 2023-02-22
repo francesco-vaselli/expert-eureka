@@ -159,7 +159,7 @@ def train(
         train_loss, train_log_p, train_log_det = train_epoch(
             model, train_loader, optimizer, epoch, device, output_freq, args=args
         )
-        test_loss, test_log_p, test_log_det = test_epoch(model, test_loader, epoch, device, test_loss_SF)
+        test_loss, test_log_p, test_log_det = test_epoch(model, test_loader, epoch, device)
 
         scheduler.step()
         train_history.append(train_loss)
