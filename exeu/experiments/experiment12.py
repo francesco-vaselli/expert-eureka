@@ -65,7 +65,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     num_layers = 30
     transforms = []
-    for i in range(15):
+    for i in range(10):
 
         transforms.append(
             PiecewiseRationalQuadraticCouplingTransformM(
@@ -76,9 +76,9 @@ def trainer(tr_dataset, te_dataset, val_func):
                     lambda in_features, out_features: nn_.ResidualNet(
                         in_features=in_features,
                         out_features=out_features,
-                        hidden_features=128,
+                        hidden_features=64,
                         context_features=args.y_dim,
-                        num_blocks=10,
+                        num_blocks=5,
                         activation=F.relu,
                         dropout_probability=0.15,
                         use_batch_norm=False,
@@ -137,7 +137,7 @@ def trainer(tr_dataset, te_dataset, val_func):
         dataset=tr_dataset,
         batch_size=512,
         shuffle=True,
-        num_workers=15,
+        num_workers=0,
         pin_memory=True,
         sampler=None,
         drop_last=True,
