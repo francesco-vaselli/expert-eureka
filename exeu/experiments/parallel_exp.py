@@ -196,7 +196,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         print("going single gpu")
     else:  # Single process, multiple GPUs per process
         model = model.cuda()
-        ddp_model = nn.DataParallel(model)
+        ddp_model = torch.nn.DataParallel(model)
         print("going multi gpu")
 
     # resume checkpoints
