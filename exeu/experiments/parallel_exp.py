@@ -208,8 +208,8 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         weight_decay=args.weight_decay,
     )
 
-    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000)
-    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000)
+    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000, gpu=gpu)
+    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000, gpu=gpu)
 
     #load all to gpu
     # tr_dataset.data.to(gpu, non_blocking=True)
