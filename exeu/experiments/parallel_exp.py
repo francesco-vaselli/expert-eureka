@@ -219,7 +219,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
     train_loader = torch.utils.data.DataLoader(
         dataset=tr_dataset,
         batch_size=512,
-        num_workers=5,
+        num_workers=args.n_load_cores,
         pin_memory=True,
         drop_last=True,
         shuffle=(train_sampler is None),
