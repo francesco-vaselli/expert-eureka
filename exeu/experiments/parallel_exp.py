@@ -24,7 +24,7 @@ from model.modded_nflows_init import (
     PiecewiseRationalQuadraticCouplingTransformM,
     MaskedPiecewiseRationalQuadraticAutoregressiveTransformM,
 )
-from utils.train_funcs import train, load_model
+from utils.train_funcs import train, load_model, save_model
 from utils.args_train import get_args
 
 from nflows.distributions.normal import StandardNormal
@@ -170,7 +170,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
             model_dir=save_dir,
             filename="checkpoint-latest.pt",
         )
-        print(f"Resumed from: {res_epoch}")
+        print(f"Resumed from: {start_epoch}")
 
     # multi-GPU setup
     if args.distributed:  # Multiple processes, single GPU per process
@@ -252,6 +252,8 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
     log_p_nats_avg_meter = AverageValueMeter()
     log_det_nats_avg_meter = AverageValueMeter()
     output_freq = 50
+    train_history = []
+    test_history = []
 
     if args.distributed:
         print("[Rank %d] World size : %d" % (args.rank, dist.get_world_size()))
@@ -261,11 +263,8 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         if args.distributed:
             train_sampler.set_epoch(epoch)
 
-        # adjust the learning rate
-        if (epoch + 1) % args.exp_decay_freq == 0:
-            scheduler.step(epoch=epoch)
-            if writer is not None:
-                writer.add_scalar("lr/optimizer", scheduler.get_lr()[0], epoch)
+        if writer is not None:
+            writer.add_scalar("lr/optimizer", scheduler.get_lr()[0], epoch)
 
         # train for one epoch
         for batch_idx, (z, y) in enumerate(train_loader):
@@ -346,6 +345,22 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
                 )
             )
 
+        scheduler.step()
+        train_history.append(train_loss)
+        test_history.append(test_loss)
+        # save checkpoints
+        if not args.distributed or (args.rank % ngpus_per_node == 0):
+            if (epoch + 1) % args.save_freq == 0:
+                save_model(
+                epoch,
+                model,
+                scheduler,
+                train_history,
+                test_history,
+                name="model",
+                model_dir=save_dir,
+                optimizer=optimizer,
+            )
 
 def main():
     args = get_args()
