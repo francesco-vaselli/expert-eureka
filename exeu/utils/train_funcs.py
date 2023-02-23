@@ -3,6 +3,93 @@ import torch
 from pathlib import Path
 
 
+def train_epoch_profiled(
+    flow,
+    train_loader,
+    optimizer,
+    epoch,
+    device=None,
+    output_freq=50,
+    args=None,
+    add_noise=True,
+    annealing=False,
+):
+    """Train model for one epoch.
+    Arguments:
+        flow {Flow} -- NSF model
+        train_loader {DataLoader} -- train set data loader
+        optimizer {Optimizer} -- model optimizer
+        epoch {int} -- epoch number
+    Keyword Arguments:
+        device {torch.device} -- model device (CPU or GPU) (default: {None})
+        output_freq {int} -- frequency for printing status (default: {50})
+    Returns:
+        float -- average train loss over epoch
+    """
+
+    flow.train()
+    train_loss = 0.0
+    train_log_p = 0.0
+    train_log_det = 0.0
+
+    with torch.profiler.profile(
+        activities=[
+            torch.profiler.ProfilerActivity.CPU,
+            torch.profiler.ProfilerActivity.CUDA
+        ],
+        on_trace_ready=torch.profiler.tensorboard_trace_handler(f'runs/{args.log_name}/profiler'),
+        record_shapes=True,
+        profile_memory=True,
+        with_stack=True
+        ) as prof:
+
+        for batch_idx, (z, y) in enumerate(train_loader):
+            optimizer.zero_grad()
+
+            if device is not None:
+                z = z.to(device, non_blocking=True)
+                y = y.to(device, non_blocking=True)
+
+            # Compute log prob
+            log_p, log_det = flow.log_prob(z, context=y)
+            loss = -log_p - log_det
+
+            # Keep track of total loss.
+            train_loss += (loss.detach()).sum()
+            train_log_p += (-log_p.detach()).sum()
+            train_log_det += (-log_det.detach()).sum()
+
+
+            # loss = (w * loss).sum() / w.sum()
+            loss = (loss).mean()
+
+            loss.backward()
+            optimizer.step()
+            prof.step()
+
+            if (output_freq is not None) and (batch_idx % output_freq == 0):
+                print(
+                    "Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.4f}".format(
+                        epoch,
+                        batch_idx * train_loader.batch_size,
+                        len(train_loader.dataset),
+                        100.0 * batch_idx / len(train_loader),
+                        loss.item(),
+                    )
+                )
+
+    train_loss = train_loss.item() / len(train_loader.dataset)
+    train_log_p = train_log_p.item()  / len(train_loader.dataset)
+    train_log_det = train_log_det.item()  / len(train_loader.dataset)
+    print(
+        "Model:{} Train Epoch: {} \tAverage Loss: {:.4f}".format(
+            args.log_name, epoch, train_loss
+        )
+    )
+    
+
+    return train_loss, train_log_p, train_log_det
+
 
 def train_epoch(
     flow,
@@ -155,10 +242,14 @@ def train(
         print(
             "Learning rate: {}".format(optimizer.state_dict()["param_groups"][0]["lr"])
         )
-
-        train_loss, train_log_p, train_log_det = train_epoch(
-            model, train_loader, optimizer, epoch, device, output_freq, args=args
-        )
+        if args.profile == True:
+            train_loss, train_log_p, train_log_det = train_epoch_profiled(
+                model, train_loader, optimizer, epoch, device, output_freq, args=args
+            )
+        else:
+            train_loss, train_log_p, train_log_det = train_epoch(
+                model, train_loader, optimizer, epoch, device, output_freq, args=args
+            )
         test_loss, test_log_p, test_log_det = test_epoch(model, test_loader, epoch, device)
 
         scheduler.step()

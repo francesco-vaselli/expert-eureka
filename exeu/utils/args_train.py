@@ -111,7 +111,8 @@ def add_args(parser):
 
     # device
     parser.add_argument('--device', default='cuda', type=str)
-
+    
+    parser.add_argument('--profile', default=False, action='store_true')
 
     return parser
 

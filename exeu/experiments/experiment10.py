@@ -45,7 +45,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     args = get_args()
     print(args)
-    args.log_name = "ex6"
+    args.log_name = "ex10"
     save_dir = os.path.join("checkpoints", args.log_name)
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
@@ -62,31 +62,17 @@ def trainer(tr_dataset, te_dataset, val_func):
     # define model
     base_dist = StandardNormal(shape=[args.x_dim])
 
-    num_layers = 30
+    num_layers = 20
     transforms = []
-    for _ in range(10):
+    for _ in range(num_layers):
         transforms.append(
             MaskedAffineAutoregressiveTransform(
                 features=args.x_dim,
                 use_residual_blocks=False,
-                num_blocks=2,
-                hidden_features=64,  # was 4, 20
+                num_blocks=6,
+                hidden_features=128,
                 context_features=args.y_dim,
-            )
-        )
-        transforms.append(create_linear_transform(param_dim=args.x_dim))
-    for _ in range(20):
-
-        transforms.append(
-            MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(
-                features=args.x_dim,
-                tails="linear",
-                use_residual_blocks=False,
-                hidden_features=64,  # was 4, 20
-                num_blocks=2,
-                tail_bound=3.0,
-                num_bins=8,
-                context_features=args.y_dim,
+                dropout_probability=0.15,
             )
         )
         transforms.append(create_linear_transform(param_dim=args.x_dim))

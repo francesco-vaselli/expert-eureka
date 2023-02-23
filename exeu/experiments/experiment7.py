@@ -134,6 +134,7 @@ def trainer(tr_dataset, te_dataset, val_func):
         )  # use the latest checkpoint
     if args.resume_checkpoint is not None and args.resume == True:
         model, _, _, res_epoch, _, _ = load_model(
+            model,
             device,
             model_dir=save_dir,
             filename="checkpoint-latest.pt",
