@@ -212,8 +212,8 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
     te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000)
 
     #load all to gpu
-    tr_dataset.data.to(gpu, non_blocking=True)
-    te_dataset.data.to(gpu, non_blocking=True)
+    # tr_dataset.data.to(gpu, non_blocking=True)
+    # te_dataset.data.to(gpu, non_blocking=True)
 
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(tr_dataset)
