@@ -137,7 +137,7 @@ def trainer(tr_dataset, te_dataset, val_func):
         dataset=tr_dataset,
         batch_size=512,
         shuffle=True,
-        num_workers=15,
+        num_workers=0,
         pin_memory=True,
         sampler=None,
         drop_last=True,
