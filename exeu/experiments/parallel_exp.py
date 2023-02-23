@@ -211,6 +211,10 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
     tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000)
     te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000)
 
+    #load all to gpu
+    tr_dataset.data.to(gpu, non_blocking=True)
+    te_dataset.data.to(gpu, non_blocking=True)
+
     if args.distributed:
         train_sampler = torch.utils.data.distributed.DistributedSampler(tr_dataset)
     else:
@@ -273,9 +277,9 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
             ddp_model.train()
             optimizer.zero_grad()
 
-            if gpu is not None:
-                z = z.cuda(args.gpu, non_blocking=True)
-                y = y.cuda(args.gpu, non_blocking=True)
+            # if gpu is not None:
+            #     z = z.cuda(args.gpu, non_blocking=True)
+            #     y = y.cuda(args.gpu, non_blocking=True)
 
             # Compute log prob
             log_p, log_det = ddp_model(z, context=y)
@@ -324,9 +328,9 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
 
             for z, y in test_loader:
 
-                if gpu is not None:
-                    z = z.cuda(args.gpu, non_blocking=True)
-                    y = y.cuda(args.gpu, non_blocking=True)
+                # if gpu is not None:
+                #     z = z.cuda(args.gpu, non_blocking=True)
+                #     y = y.cuda(args.gpu, non_blocking=True)
 
                 # Compute log prob
                 log_p, log_det = ddp_model(z, context=y)
