@@ -69,7 +69,7 @@ def trainer(tr_dataset, te_dataset, val_func):
             MaskedAffineAutoregressiveTransform(
                 features=args.x_dim,
                 use_residual_blocks=False,
-                num_blocks=6,
+                num_blocks=10,
                 hidden_features=128,
                 context_features=args.y_dim,
                 dropout_probability=0.15,
