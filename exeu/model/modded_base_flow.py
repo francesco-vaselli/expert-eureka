@@ -1,6 +1,6 @@
 import torch.nn
 
-from .modded_dist import Distribution
+from .modded_dist import DistributionM
 from nflows.utils import torchutils
 
 from inspect import signature
