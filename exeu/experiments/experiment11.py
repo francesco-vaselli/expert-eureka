@@ -76,9 +76,9 @@ def trainer(tr_dataset, te_dataset, val_func):
                     lambda in_features, out_features: nn_.ResidualNet(
                         in_features=in_features,
                         out_features=out_features,
-                        hidden_features=64,
+                        hidden_features=128,
                         context_features=args.y_dim,
-                        num_blocks=5,
+                        num_blocks=10,
                         activation=F.relu,
                         dropout_probability=0.15,
                         use_batch_norm=False,
