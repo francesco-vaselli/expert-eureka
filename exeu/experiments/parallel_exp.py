@@ -221,7 +221,6 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         batch_size=512,
         num_workers=5,
         pin_memory=True,
-        sampler=None,
         drop_last=True,
         shuffle=(train_sampler is None),
         sampler=train_sampler,
