@@ -266,6 +266,9 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
             writer.add_scalar("lr/optimizer", scheduler.get_lr()[0], epoch)
 
         # train for one epoch
+        train_loss = 0.0
+        train_log_p = 0.0
+        train_log_det = 0.0
         for batch_idx, (z, y) in enumerate(train_loader):
             ddp_model.train()
             optimizer.zero_grad()
