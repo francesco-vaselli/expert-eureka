@@ -9,7 +9,7 @@ def train_epoch(
     train_loader,
     optimizer,
     epoch,
-    device=None,
+    gpu=0,
     output_freq=50,
     args=None,
     add_noise=True,
@@ -36,12 +36,12 @@ def train_epoch(
     for batch_idx, (z, y) in enumerate(train_loader):
         optimizer.zero_grad()
 
-        if device is not None:
-            z = z.to(device, non_blocking=True)
-            y = y.to(device, non_blocking=True)
+        if gpu is not None:
+            z = z.cuda(gpu, non_blocking=True)
+            y = y.cuda(gpu, non_blocking=True)
 
         # Compute log prob
-        log_p, log_det = flow.log_prob(z, context=y)
+        log_p, log_det = flow(z, context=y)
         loss = -log_p - log_det
 
         # Keep track of total loss.
@@ -79,7 +79,7 @@ def train_epoch(
     return train_loss, train_log_p, train_log_det
 
 
-def test_epoch(flow, test_loader, epoch, device=None):
+def test_epoch(flow, test_loader, epoch, gpu=0):
     """Calculate test loss for one epoch.
     Arguments:
         flow {Flow} -- NSF model
@@ -99,12 +99,12 @@ def test_epoch(flow, test_loader, epoch, device=None):
 
         for z, y in test_loader:
 
-            if device is not None:
-                z = z.to(device, non_blocking=True)
-                y = y.to(device, non_blocking=True)
+            if gpu is not None:
+                z = z.cuda(gpu, non_blocking=True)
+                y = y.cuda(gpu, non_blocking=True)
 
             # Compute log prob
-            log_p, log_det = flow.log_prob(z, context=y)
+            log_p, log_det = flow(z, context=y)
             loss = -log_p - log_det
 
             # Keep track of total loss.

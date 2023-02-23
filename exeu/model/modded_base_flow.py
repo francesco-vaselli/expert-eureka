@@ -1,12 +1,12 @@
 import torch.nn
 
-from nflows.distributions.base import Distribution
+from .modded_dist import Distribution
 from nflows.utils import torchutils
 
 from inspect import signature
 
 
-class FlowM(Distribution):
+class FlowM(DistributionM):
     """Base class for all flow objects."""
 
     def __init__(self, transform, distribution, embedding_net=None):
