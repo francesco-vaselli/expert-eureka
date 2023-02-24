@@ -115,8 +115,8 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     # tr_dataset = TorchDataset(csv_file='../dataset/data.csv', stop=75000)
     # te_dataset = TorchDataset(csv_file='../dataset/data.csv', start=75000)
-    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000)
-    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000)
+    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000, device=device)
+    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000, device=device)
 
     train_loader = torch.utils.data.DataLoader(
         dataset=tr_dataset,

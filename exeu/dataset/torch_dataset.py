@@ -5,7 +5,7 @@ import numpy as np
 
 
 class TorchDataset(Dataset):
-    def __init__(self, csv_file, start=0, stop=None, seed=0, gpu=0):
+    def __init__(self, csv_file, start=0, stop=None, seed=0, gpu=0, device=None):
         self.data = pd.read_csv(csv_file)
         y = self.data[["rhoT", "phiT"]].values[start:stop]
         x = self.data[["rho0", "phi0", "rho1", "phi1", "quad", "poisson"]]
@@ -23,7 +23,6 @@ class TorchDataset(Dataset):
 
         # self.y.cuda(gpu)
         # self.x.cuda(gpu)
-        device = torch.device("cuda")
         self.y.to(device)
         self.x.to(device)
 
