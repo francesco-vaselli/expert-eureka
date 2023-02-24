@@ -6,6 +6,8 @@ import time
 from tensorboardX import SummaryWriter
 import sys
 import os
+import pandas as pd
+import numpy as np
 
 sys.path.insert(0, os.path.join("..", "..", "exeu"))
 
@@ -116,8 +118,25 @@ def trainer(val_func):
 
     # tr_dataset = TorchDataset(csv_file='../dataset/data.csv', stop=75000)
     # te_dataset = TorchDataset(csv_file='../dataset/data.csv', start=75000)
-    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=95000, device=device)
-    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=95000, stop=96000, device=device)
+    csv_file="../dataset/data.csv"
+    data = pd.read_csv(csv_file)
+    y = data[["rhoT", "phiT"]].values
+    x = data[["rho0", "phi0", "rho1", "phi1", "quad", "poisson"]]
+    np.random.seed(0)
+    x.loc[:, "quad"] = (
+        x["quad"].values + np.random.uniform(low=-0.5, high=0.5, size=len(x))
+    ) / 4
+    x.loc[:, 'poisson'] = (
+        x["poisson"].values + np.random.uniform(low=-0.5, high=0.5, size=len(x))
+    ) / 16
+    x = x.values
+
+    y = torch.from_numpy(y).float().to(device)
+    x = torch.from_numpy(x).float().to(device)
+    tr_dataset = torch.utils.data.TensorDataset(x[:95000], y[:95000])
+    te_dataset = torch.utils.data.TensorDataset(x[95000:96000], y[95000:96000])
+    # tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=95000, device=device)
+    # te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=95000, stop=96000, device=device)
 
     train_loader = torch.utils.data.DataLoader(
         dataset=tr_dataset,
