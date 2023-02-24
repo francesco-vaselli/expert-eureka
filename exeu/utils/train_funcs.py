@@ -257,7 +257,7 @@ def load_model(model, model_dir=None, filename=None):
         )
 
     p = Path(model_dir)
-    checkpoint = torch.load(p / filename, map_location=device)
+    checkpoint = torch.load(p / filename, map_location='cpu')
 
     # model_hyperparams = checkpoint["model_hyperparams"]
     train_history = checkpoint["train_history"]
