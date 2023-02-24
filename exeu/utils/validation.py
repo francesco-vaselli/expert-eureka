@@ -23,7 +23,7 @@ def validate(
 
         for _, (x, y) in enumerate(test_loader):
             # print('x', x.shape, 'y', y.shape, 'N', N.shape)
-            inputs_y = y.to(device)
+            inputs_y = y.cuda(device)
             # print('inputs_y', inputs_y.shape)
             x_sampled = model.sample(
                     num_samples=1, context=inputs_y.view(-1, args.y_dim)

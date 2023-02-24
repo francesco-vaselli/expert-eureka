@@ -88,7 +88,7 @@ def create_linear_transform(param_dim):
     )
 
 
-def trainer(gpu, save_dir, ngpus_per_node, args):
+def trainer(gpu, save_dir, ngpus_per_node, args, val_func):
     # basic setup
     cudnn.benchmark = False  # to be tried later
     args.gpu = gpu
@@ -192,7 +192,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
             ), "DistributedDataParallel constructor should always set the single device scope"
     elif args.gpu is not None:  # Single process, single GPU per process
         torch.cuda.set_device(args.gpu)
-        model = model.cuda(args.gpu)
+        ddp_model = model.cuda(args.gpu)
         print("going single gpu")
     else:  # Single process, multiple GPUs per process
         model = model.cuda()
@@ -314,6 +314,10 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         train_loss = train_loss.item() / len(train_loader.dataset)
         train_log_p = train_log_p.item() / len(train_loader.dataset)
         train_log_det = train_log_det.item() / len(train_loader.dataset)
+        if not args.distributed or (args.rank % ngpus_per_node == 0):
+            writer.add_scalar("train/loss", train_loss, epoch)
+            writer.add_scalar("train/log_p", train_log_p, epoch)
+            writer.add_scalar("train/log_det", train_log_det, epoch)
         print(
             "Model:{} Train Epoch: {} \tAverage Loss: {:.4f}, \tAverage log p: {:.4f}, \tAverage log det: {:.4f}".format(
                 args.log_name, epoch, train_loss, train_log_p, train_log_det
@@ -344,6 +348,10 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
             test_loss = test_loss.item() / len(test_loader.dataset)
             test_log_p = test_log_p.item() / len(test_loader.dataset)
             test_log_det = test_log_det.item() / len(test_loader.dataset)
+            if not args.distributed or (args.rank % ngpus_per_node == 0):
+                writer.add_scalar("test/loss", test_loss, epoch)
+                writer.add_scalar("test/log_p", test_log_p, epoch)
+                writer.add_scalar("test/log_det", test_log_det, epoch)
             # test_loss = test_loss.item() / total_weight.item()
             print(
                 "Test set: Average loss: {:.4f}, \tAverage log p: {:.4f}, \tAverage log det: {:.4f}".format(
@@ -354,6 +362,15 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         scheduler.step()
         train_history.append(train_loss)
         test_history.append(test_loss)
+        if epoch % args.val_freq == 0:
+            if val_func is not None:
+                if not args.distributed or (args.rank % ngpus_per_node == 0):
+                    val_func(test_loader,
+                                model,
+                                epoch,
+                                writer,
+                                args,
+                                args.gpu,)
         # save checkpoints
         if not args.distributed or (args.rank % ngpus_per_node == 0):
             if (epoch + 1) % args.save_freq == 0:
@@ -384,12 +401,13 @@ def main():
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
 
+    val_func = validate
     ngpus_per_node = torch.cuda.device_count()
     if args.distributed:
         args.world_size = ngpus_per_node * args.world_size
-        mp.spawn(trainer, nprocs=ngpus_per_node, args=(save_dir, ngpus_per_node, args))
+        mp.spawn(trainer, nprocs=ngpus_per_node, args=(save_dir, ngpus_per_node, args, val_func))
     else:
-        trainer(args.gpu, save_dir, ngpus_per_node, args)
+        trainer(args.gpu, save_dir, ngpus_per_node, args, val_func)
 
 
 if __name__ == "__main__":
