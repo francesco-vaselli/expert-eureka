@@ -23,8 +23,8 @@ class TorchDataset(Dataset):
 
         # self.y.cuda(gpu)
         # self.x.cuda(gpu)
-        self.y.to(device)
-        self.x.to(device)
+        self.y.cuda()
+        self.x.cuda()
         print(self.x.device)
         print(self.y.device)
 
