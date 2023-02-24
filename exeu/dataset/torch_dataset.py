@@ -18,13 +18,13 @@ class TorchDataset(Dataset):
         ) / 16
         x = x.values[start:stop]
 
-        self.y = torch.from_numpy(y).float()
-        self.x = torch.from_numpy(x).float()
+        self.y = torch.from_numpy(y).float().to(device)
+        self.x = torch.from_numpy(x).float().to(device)
 
         # self.y.cuda(gpu)
         # self.x.cuda(gpu)
-        self.y.cuda()
-        self.x.cuda()
+        # self.y.cuda()
+        # self.x.cuda()
         print(self.x.device)
         print(self.y.device)
 
