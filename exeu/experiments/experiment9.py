@@ -41,7 +41,7 @@ def create_linear_transform(param_dim):
     )
 
 
-def trainer(tr_dataset, te_dataset, val_func):
+def trainer(val_func):
 
     args = get_args()
     print(args)
@@ -163,6 +163,5 @@ def trainer(tr_dataset, te_dataset, val_func):
 
 
 if __name__ == "__main__":
-    tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=950000)
-    te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=950000)
-    trainer(tr_dataset, te_dataset, validate)
+
+    trainer(validate)
