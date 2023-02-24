@@ -25,6 +25,8 @@ class TorchDataset(Dataset):
         # self.x.cuda(gpu)
         self.y.to(device)
         self.x.to(device)
+        print(self.x.device)
+        print(self.y.device)
 
     def __len__(self):
         return len(self.x)
