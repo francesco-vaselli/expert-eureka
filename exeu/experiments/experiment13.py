@@ -64,7 +64,7 @@ def trainer(tr_dataset, te_dataset, val_func):
 
     num_layers = 30
     transforms = []
-    for _ in range(15):
+    for _ in range(20):
 
         transforms.append(
             MaskedPiecewiseRationalQuadraticAutoregressiveTransformM(
