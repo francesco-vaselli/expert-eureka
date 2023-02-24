@@ -133,7 +133,7 @@ def trainer(val_func):
 
     y = torch.from_numpy(y).float().to(device)
     x = torch.from_numpy(x).float().to(device)
-    tr_dataset = torch.utils.data.TensorDataset(x[:95000], y[:95000])
+    tr_dataset = torch.utils.data.TensorDataset(x[:950000], y[:950000])
     te_dataset = torch.utils.data.TensorDataset(x[95000:96000], y[95000:96000])
     # tr_dataset = TorchDataset(csv_file="../dataset/data.csv", stop=95000, device=device)
     # te_dataset = TorchDataset(csv_file="../dataset/data.csv", start=95000, stop=96000, device=device)
