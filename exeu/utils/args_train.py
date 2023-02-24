@@ -46,6 +46,7 @@ def add_args(parser):
 
     # training options
     parser.add_argument('--n_load_cores', type=int, default=20)
+    parser.add_argument('--pin_memory', type=eval, default=True, choices=[True, False])
     parser.add_argument('--optimizer', type=str, default='adam',
                         help='Optimizer to use', choices=['adam', 'adamax', 'sgd'])
     parser.add_argument('--batch_size', type=int, default=512,

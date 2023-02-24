@@ -21,8 +21,8 @@ class TorchDataset(Dataset):
         self.y = torch.from_numpy(y).float()
         self.x = torch.from_numpy(x).float()
 
-        self.y.cuda(gpu)
-        self.x.cuda(gpu)
+        # self.y.cuda(gpu)
+        # self.x.cuda(gpu)
 
     def __len__(self):
         return len(self.x)

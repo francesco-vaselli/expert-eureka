@@ -224,7 +224,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         dataset=tr_dataset,
         batch_size=512,
         num_workers=args.n_load_cores,
-        pin_memory=~args.distributed,
+        pin_memory=args.pin_memory,
         drop_last=True,
         shuffle=(train_sampler is None),
         sampler=train_sampler,
@@ -237,7 +237,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         batch_size=1000,  # manually set batch size to avoid diff shapes
         shuffle=False,
         num_workers=0,
-        pin_memory=~args.distributed,
+        pin_memory=args.pin_memory,
         drop_last=True,
         worker_init_fn=init_np_seed,
     )
@@ -277,9 +277,9 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
             ddp_model.train()
             optimizer.zero_grad()
 
-            # if gpu is not None:
-            #     z = z.cuda(args.gpu, non_blocking=True)
-            #     y = y.cuda(args.gpu, non_blocking=True)
+            if gpu is not None:
+                z = z.cuda(args.gpu, non_blocking=True)
+                y = y.cuda(args.gpu, non_blocking=True)
 
             # Compute log prob
             log_p, log_det = ddp_model(z, context=y)
@@ -328,9 +328,9 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
 
             for z, y in test_loader:
 
-                # if gpu is not None:
-                #     z = z.cuda(args.gpu, non_blocking=True)
-                #     y = y.cuda(args.gpu, non_blocking=True)
+                if gpu is not None:
+                    z = z.cuda(args.gpu, non_blocking=True)
+                    y = y.cuda(args.gpu, non_blocking=True)
 
                 # Compute log prob
                 log_p, log_det = ddp_model(z, context=y)
