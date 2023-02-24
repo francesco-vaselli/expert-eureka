@@ -120,8 +120,8 @@ def trainer(tr_dataset, te_dataset, val_func):
         dataset=tr_dataset,
         batch_size=512,
         shuffle=True,
-        num_workers=15,
-        pin_memory=True,
+        num_workers=args.n_load_cores,
+        pin_memory=args.pin_memory,
         sampler=None,
         drop_last=True,
         # worker_init_fn=init_np_seed,
@@ -132,7 +132,7 @@ def trainer(tr_dataset, te_dataset, val_func):
         batch_size=1000,  # manually set batch size to avoid diff shapes
         shuffle=False,
         num_workers=0,
-        pin_memory=True,
+        pin_memory=args.pin_memory,
         drop_last=True,
     )
 
