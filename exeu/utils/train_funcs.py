@@ -36,9 +36,9 @@ def train_epoch(
     for batch_idx, (z, y) in enumerate(train_loader):
         optimizer.zero_grad()
 
-        # if gpu is not None:
-        #     z = z.cuda(gpu, non_blocking=True)
-        #     y = y.cuda(gpu, non_blocking=True)
+        if gpu is not None:
+            z = z.cuda(gpu, non_blocking=True)
+            y = y.cuda(gpu, non_blocking=True)
 
         # Compute log prob
         log_p, log_det = flow(z, context=y)
@@ -99,9 +99,9 @@ def test_epoch(flow, test_loader, epoch, gpu=0):
 
         for z, y in test_loader:
 
-            # if gpu is not None:
-            #     z = z.cuda(gpu, non_blocking=True)
-            #     y = y.cuda(gpu, non_blocking=True)
+            if gpu is not None:
+                z = z.cuda(gpu, non_blocking=True)
+                y = y.cuda(gpu, non_blocking=True)
 
             # Compute log prob
             log_p, log_det = flow(z, context=y)
