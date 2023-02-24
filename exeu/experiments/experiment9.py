@@ -83,6 +83,7 @@ def trainer(tr_dataset, te_dataset, val_func):
     if args.device == "cuda":  # Single process, single GPU per process
         if torch.cuda.is_available():
             device = torch.device("cuda")
+            print(device)
             model.to(device)
             print("!!  USING GPU  !!")
 
