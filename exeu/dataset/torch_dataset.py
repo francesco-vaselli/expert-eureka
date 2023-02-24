@@ -18,8 +18,11 @@ class TorchDataset(Dataset):
         ) / 16
         x = x.values[start:stop]
 
-        self.y = torch.from_numpy(y).float().cuda(gpu)
-        self.x = torch.from_numpy(x).float().cuda(gpu)
+        self.y = torch.from_numpy(y).float()
+        self.x = torch.from_numpy(x).float()
+
+        self.y.cuda(gpu)
+        self.x.cuda(gpu)
 
     def __len__(self):
         return len(self.x)

@@ -224,7 +224,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         dataset=tr_dataset,
         batch_size=512,
         num_workers=args.n_load_cores,
-        pin_memory=True,
+        pin_memory=~args.distributed,
         drop_last=True,
         shuffle=(train_sampler is None),
         sampler=train_sampler,
@@ -237,7 +237,7 @@ def trainer(gpu, save_dir, ngpus_per_node, args):
         batch_size=1000,  # manually set batch size to avoid diff shapes
         shuffle=False,
         num_workers=0,
-        pin_memory=True,
+        pin_memory=~args.distributed,
         drop_last=True,
         worker_init_fn=init_np_seed,
     )
