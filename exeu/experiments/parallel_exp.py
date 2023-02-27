@@ -90,7 +90,7 @@ def create_linear_transform(param_dim):
 
 def trainer(gpu, save_dir, ngpus_per_node, args, val_func):
     # basic setup
-    cudnn.benchmark = True  # to be tried later
+    cudnn.benchmark = False  # to be tried later
     args.gpu = gpu
     if args.gpu is not None:
         print("Use GPU: {} for training".format(args.gpu))
