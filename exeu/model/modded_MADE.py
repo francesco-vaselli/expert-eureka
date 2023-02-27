@@ -216,20 +216,23 @@ class MaskedContextLinear(nn.Linear):
         super().__init__(
             in_features=len(in_degrees)+context_features, out_features=out_features, bias=bias
         )
+
+        self.context_mask = torch.ones((out_features, context_features)).float()
         mask, degrees = self._get_mask_and_degrees(
             in_degrees=in_degrees,
             out_features=out_features,
             autoregressive_features=autoregressive_features,
             random_mask=random_mask,
             is_output=is_output,
+            context_mask = self.context_mask,
         )
         self.register_buffer("mask", mask)
         self.register_buffer("degrees", degrees)
-        self.context_mask = torch.ones((out_features, context_features)).float()
+        
 
     @classmethod
     def _get_mask_and_degrees(
-        cls, in_degrees, out_features, autoregressive_features, random_mask, is_output, self
+        cls, in_degrees, out_features, autoregressive_features, random_mask, is_output, context_mask
     ):
         if is_output:
             out_degrees = torchutils.tile(
@@ -237,7 +240,7 @@ class MaskedContextLinear(nn.Linear):
                 out_features // autoregressive_features,
             )
             mask = (out_degrees[..., None] > in_degrees).float()
-            mask = torch.hstack((mask, self.context_mask))
+            mask = torch.hstack((mask, context_mask))
 
         else:
             if random_mask:
@@ -255,7 +258,7 @@ class MaskedContextLinear(nn.Linear):
                 out_degrees = torch.arange(out_features) % max_ + min_
 
             mask = (out_degrees[..., None] >= in_degrees).float()
-            mask = torch.hstack((mask, self.context_mask))
+            mask = torch.hstack((mask, context_mask))
 
         return mask, out_degrees
 
