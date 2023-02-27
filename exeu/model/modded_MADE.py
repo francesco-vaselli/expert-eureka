@@ -434,7 +434,7 @@ class ContextMADE(nn.Module):
         # Residual blocks.
         blocks = []
         if use_residual_blocks:
-            block_constructor = MaskedtResidualBlock
+            block_constructor = MaskedResidualBlock
         else:
             block_constructor = MaskedFeedforwardBlock
         prev_out_degrees = self.initial_layer.degrees
