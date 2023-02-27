@@ -229,7 +229,7 @@ class MaskedContextLinear(nn.Linear):
 
     @classmethod
     def _get_mask_and_degrees(
-        self, cls, in_degrees, out_features, autoregressive_features, random_mask, is_output
+        cls, in_degrees, out_features, autoregressive_features, random_mask, is_output, self
     ):
         if is_output:
             out_degrees = torchutils.tile(
