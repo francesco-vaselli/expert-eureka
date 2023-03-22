@@ -12,6 +12,7 @@ def _get_input_degrees(in_features):
     """Returns the degrees an input to MADE should have."""
     return torch.arange(1, in_features + 1)
 
+
 class MaskedLinear(nn.Linear):
     """A linear module with a masked weight matrix."""
 
@@ -208,13 +209,15 @@ class MaskedContextLinear(nn.Linear):
         in_degrees,
         out_features,
         autoregressive_features,
-        context_features, # the number of context features
+        context_features,  # the number of context features
         random_mask,
         is_output,
         bias=True,
     ):
         super().__init__(
-            in_features=len(in_degrees)+context_features, out_features=out_features, bias=bias
+            in_features=len(in_degrees) + context_features,
+            out_features=out_features,
+            bias=bias,
         )
 
         self.context_mask = torch.ones((out_features, context_features)).float()
@@ -224,15 +227,20 @@ class MaskedContextLinear(nn.Linear):
             autoregressive_features=autoregressive_features,
             random_mask=random_mask,
             is_output=is_output,
-            context_mask = self.context_mask,
+            context_mask=self.context_mask,
         )
         self.register_buffer("mask", mask)
         self.register_buffer("degrees", degrees)
-        
 
     @classmethod
     def _get_mask_and_degrees(
-        cls, in_degrees, out_features, autoregressive_features, random_mask, is_output, context_mask
+        cls,
+        in_degrees,
+        out_features,
+        autoregressive_features,
+        random_mask,
+        is_output,
+        context_mask,
     ):
         if is_output:
             out_degrees = torchutils.tile(
@@ -263,7 +271,9 @@ class MaskedContextLinear(nn.Linear):
         return mask, out_degrees
 
     def forward(self, x, context):
-        return F.linear(torch.cat((x, context), dim=1), self.weight * self.mask, self.bias)
+        return F.linear(
+            torch.cat((x, context), dim=1), self.weight * self.mask, self.bias
+        )
 
 
 class MaskedContextFeedforwardBlock(nn.Module):
