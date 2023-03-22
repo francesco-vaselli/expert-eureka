@@ -156,10 +156,11 @@ def trainer(tr_dataset, te_dataset, val_func):
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(total_params)
     print(len(train_loader.dataset))
-    # model = torch.compile(model, mode='max-autotune', fullgraph=True)
+    modelc = torch.compile(model, mode='max-autotune', fullgraph=True)
+    print('compiled')
 
     trh, tsh = train(
-        model,
+        modelc,
         train_loader,
         test_loader,
         epochs=args.epochs,
