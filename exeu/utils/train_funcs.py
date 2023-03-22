@@ -120,8 +120,9 @@ def train_epoch(
     train_log_p = 0.0
     train_log_det = 0.0
 
+    t = 0
     for batch_idx, (z, y) in enumerate(train_loader):
-        t = time.time()
+        t1 = time.time()
         optimizer.zero_grad()
 
         if device is not None:
@@ -143,7 +144,8 @@ def train_epoch(
 
         loss.backward()
         optimizer.step()
-
+        t2 = time.time()
+        t += t2 - t1
         if (output_freq is not None) and (batch_idx % output_freq == 0):
             print(
                 "Train Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.4f} in time {:.2f}".format(
@@ -152,9 +154,10 @@ def train_epoch(
                     len(train_loader.dataset),
                     100.0 * batch_idx / len(train_loader),
                     loss.item(),
-                    time.time() - t
+                    t
                 )
             )
+            t = 0
 
     train_loss = train_loss.item() / len(train_loader.dataset)
     train_log_p = train_log_p.item()  / len(train_loader.dataset)
