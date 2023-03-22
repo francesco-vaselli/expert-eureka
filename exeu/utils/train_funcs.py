@@ -121,7 +121,7 @@ def train_epoch(
     train_log_det = 0.0
 
     for batch_idx, (z, y) in enumerate(train_loader):
-        time = time.time()
+        t = time.time()
         optimizer.zero_grad()
 
         if device is not None:
@@ -152,7 +152,7 @@ def train_epoch(
                     len(train_loader.dataset),
                     100.0 * batch_idx / len(train_loader),
                     loss.item(),
-                    time.time() - time
+                    time.time() - t
                 )
             )
 
