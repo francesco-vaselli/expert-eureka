@@ -1,7 +1,7 @@
 # the train funcs for training the model
 import torch
 from pathlib import Path
-
+import time 
 
 def train_epoch_profiled(
     flow,
